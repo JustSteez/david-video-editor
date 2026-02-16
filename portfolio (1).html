@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Editor Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #151515;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a8a8a8;
+            --accent: #ff4444;
+            --accent-dim: #cc3636;
+            --border: #282828;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 400;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            line-height: 0.95;
+            letter-spacing: -0.03em;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s 0.2s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            color: var(--text-secondary);
+            font-weight: 300;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s 0.4s forwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--accent);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: fadeInUp 1s 0.6s forwards;
+        }
+
+        .cta-button:hover {
+            background: var(--accent-dim);
+            transform: translateY(-2px);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 3rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+            font-weight: 300;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+        }
+
+        .project-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-8px);
+        }
+
+        .project-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-thumbnail::before {
+            content: '▶';
+            font-size: 3rem;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s;
+            position: absolute;
+            z-index: 2;
+        }
+
+        .project-card:hover .project-thumbnail::before {
+            opacity: 1;
+        }
+
+        .project-thumbnail::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 68, 68, 0.1);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover .project-thumbnail::after {
+            opacity: 1;
+        }
+
+        .project-info {
+            padding: 2rem;
+        }
+
+        .project-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-category {
+            color: var(--accent);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .skill-category:hover {
+            border-color: var(--accent);
+        }
+
+        .skill-category-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skill-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .skill-name {
+            font-weight: 400;
+        }
+
+        .skill-level {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Testimonials */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            position: relative;
+        }
+
+        .testimonial-quote {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .author-title {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .contact-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.7;
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .contact-link:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .projects-grid,
+            .skills-container,
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">David Oyelakin</div>
+            <ul class="nav-links">
+                <li><a href="#work">Work</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#testimonials">Testimonials</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Video Editor<br>& Storyteller</h1>
+            <p class="hero-subtitle">Crafting compelling visual narratives that captivate audiences and elevate brands through dynamic editing and creative vision.</p>
+            <a href="#work" class="cta-button">View My Work</a>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="work">
+        <h2 class="section-title">Selected Work</h2>
+        <p class="section-subtitle">Recent projects showcasing creative storytelling and technical expertise</p>
+        
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"> <img src="photo_2026-02-16_12-09-06.jpg" alt="Thumbnail" href="https://x.com/aixarizzo/status/2000629026394947851?s=46">> </span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Commercial Like + Interview</div>
+                    <h3 class="project-title">Brand Launch Campaign</h3>
+                    <p class="project-description">90-second commercial featuring dynamic cuts, color grading, and motion graphics that increased brand awareness</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"><img src="photo_2026-02-16_12-09-08.jpg" alt="Thumbnail"></span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">DevConnect</div>
+                    <h3 class="project-title">OOTD at DevConnect Argentina</h3>
+                    <p class="project-description">Outfit Of The Day series featuring narrative-driven editing and cinematic color grading with web3 founders and team at DevConnect</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"><img src="photo_2026-02-16_12-09-07.jpg" alt="Thumbnail"></span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Event Interview</div>
+                    <h3 class="project-title">Rhythm & Visuals</h3>
+                    <p class="project-description">High-energy interview with beat-synced editing, creative transitions, and VFX that garnered lot of engagement in first week.</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"><img src="photo_2026-02-16_12-11-03 (2).jpg" alt="Thumbnail"></span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Social Media</div>
+                    <h3 class="project-title">Viral Content Clipping</h3>
+                    <p class="project-description">15-30 second social media content optimized for each platform, achieving 300% increase in engagement metrics.</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"><img src="photo_2026-02-16_12-11-03.jpg" alt="Thumbnail"></span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Motion Graphics</div>
+                    <h3 class="project-title">Tech Product Launch</h3>
+                    <p class="project-description">Sleek product demo video with motion graphics, 3D integration and professional sound design.</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-thumbnail">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;"><img src="photo_2026-02-16_12-11-02.jpg" alt="Thumbnail"></span>
+                </div>
+                <div class="project-info">
+                    <div class="project-category">Website Coverage</div>
+                    <h3 class="project-title">Website Highlight Reel</h3>
+                    <p class="project-description">Fast-paced Website recap with  editing, sound design, and dynamic pacing that captured the Website's energy.</p>
+                    <div class="project-stats">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills">
+        <h2 class="section-title">Skills & Expertise</h2>
+        <p class="section-subtitle">Technical proficiency and creative capabilities</p>
+        
+        <div class="skills-container">
+            <div class="skill-category">
+                <h3 class="skill-category-title">Editing Software</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-name">Capcut Final Pro</span>
+                        <span class="skill-level">Expert</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">DaVinci Resolve</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Canva</span>
+                        <span class="skill-level">Advanced</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3 class="skill-category-title">Post-Production</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-name">Color Grading</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Sound Design</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Color Grading</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Audio Mixing</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="skill-category">
+                <h3 class="skill-category-title">Creative Skills</h3>
+                <ul class="skill-list">
+                    <li class="skill-item">
+                        <span class="skill-name">Storytelling</span>
+                        <span class="skill-level">Expert</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Pacing & Rhythm</span>
+                        <span class="skill-level">Expert</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Visual Effects</span>
+                        <span class="skill-level">Advanced</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Creative Direction</span>
+                        <span class="skill-level">Advanced</span>
+                    </li>
+                    <li class="skill-item">
+                        <span class="skill-name">Motion Graphics</span>
+                        <span class="skill-level">Proficient</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <h2 class="section-title">Client Testimonials</h2>
+        <p class="section-subtitle">What clients say about working with me</p>
+        
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">Exceptional attention to detail and creative vision. The final product exceeded my expectations and helped me achieve a 200% increase in engagement. Highly recommended for any video project."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">A</div>
+                    <div class="author-info">
+                        <div class="author-name">Aixa</div>
+                        <div class="author-title">Sophon</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">Professional, efficient and incredibly talented. Delivered my content on time and on budget while maintaining the highest quality standards. The best editor I've worked with."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JD</div>
+                    <div class="author-info">
+                        <div class="author-name">Josh Oyelakin</div>
+                        <div class="author-title">X KOL</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="testimonial-card">
+                <p class="testimonial-quote">Transformed my raw footage into a compelling story that resonated with my audience. The color grading and pacing were absolutely perfect. I've seen tremendous results from the campaign.</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">PM</div>
+                    <div class="author-info">
+                        <div class="author-name">Pretty Mayamy</div>
+                        <div class="author-title">Lifestyle Content Creator</div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="contact-content">
+            <h2 class="contact-title">Let's Create Something Amazing</h2>
+            <p class="contact-text">Available for freelance projects, collaborations, and full-time opportunities. Let's discuss how I can help bring your vision to life.</p>
+            <div class="contact-links">
+                <a href="mailto:justdaviex@gmail.com" class="contact-link">
+                    <span>Email Me</span>
+                </a>
+                <a href="https://drive.google.com/drive/folders/1QNmJ3JjCXlGE3H7GbnuP1KmQFtKiQiwq" class="contact-link">
+                    <span>View Resume</span>
+                </a>
+                <a href="https://www.linkedin.com/in/oyelakin-david-ab7789203?utm_source=share_via&utm_content=profile&utm_medium=member_ios" class="contact-link">
+                    <span>LinkedIn</span>
+                </a>
+                <a href="https://x.com/justdavid0x" class="contact-link">
+                    <span>Twitter</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 David. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll-based animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for scroll animations
+        document.querySelectorAll('.project-card, .skill-category, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s, transform 0.6s';
+            observer.observe(el);
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(10, 10, 10, 0.98)';
+            } else {
+                header.style.background = 'rgba(10, 10, 10, 0.95)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
